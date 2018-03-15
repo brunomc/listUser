@@ -1,0 +1,179 @@
+<!DOCTYPE html   >
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<h2>Listagem de Users</h2>
+	
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />   
+</h:head>
+<h:body>
+	<h:panelGrid>
+		<p:commandButton icon="ui-icon-plus" value="New User" type="button"
+			onclick="PF('dlg2').show();" update="@form" />
+	</h:panelGrid>
+	<h:panelGrid>
+		<h:form id="form1">
+			<p:dataTable widgetVar="listaData" var="user"
+				value="#{userBean.users}"
+				emptyMessage="Não exitem users cadastrados" draggableColumns="true"
+				sortBy="#{user.username}" rows="10" paginator="true"
+				style="font-size:10pt;">
+
+				<p:column headerText="Id" style="width:10%;" sortBy="#{user.id}"
+					filterBy="#{user.id}" filterStyle="width:90%;">
+					<h:outputText value="#{user.id}" />
+				</p:column>
+				<p:column headerText="Username" style="width:10%;"
+					sortBy="#{user.username}" filterBy="#{user.username}"
+					filterStyle="width:90%;">
+					<h:outputText value="#{user.username}" />
+				</p:column>
+				<p:column headerText="Password" style="width:10%;"
+					sortBy="#{user.password}" filterBy="#{user.password}"
+					filterStyle="width:90%;">
+					<h:outputText value="#{user.password}" />
+				</p:column>
+				<p:column headerText="Enabled?" style="width:10%;"
+					sortBy="#{user.is_enabled}" filterBy="#{user.is_enabled}"
+					filterStyle="width:90%;">
+					<h:outputText value="#{userBean.changeLabel(user)}"  />
+				</p:column>
+				<p:column headerText="Unidade Responsável" style="width:10%;"
+					sortBy="#{user.username}" filterBy="#{user.username}"
+					filterStyle="width:90%;">
+					<h:outputText value="#{user.username}" />
+				</p:column>
+				
+				<p:column style="width:8%;">
+						<p:growl id="message" showDetail="true" />
+						<p:commandButton value="Excluir"
+							actionListener="#{userBean.delete(user)}"
+							update="form1 message" process="@form">
+							<p:confirm header="Confirmação" message="Confirmar exclusão?"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+						
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Confirmar" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="Cancelar" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+						<p:commandButton icon="ui-icon-pencil" value="Editar"
+							action="#{userBean.populaEdit(user)}" update="@form" />
+					</p:column>
+				
+				
+			</p:dataTable>
+		</h:form>
+	</h:panelGrid>
+
+	<!-- Modal Cadastro -->
+	<p:dialog header="New User" widgetVar="dlg2" modal="true" height="60%"
+		width="70%">
+
+		<h:form id="form">
+			<p:growl>
+			</p:growl>
+
+			<p:messages />
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Name:*" />
+				<p:inputText id="name" size="60" value="#{userBean.user.name}"
+					required="true" label="Name" placeholder="Name of User">
+				</p:inputText>
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Surname:*" />
+				<p:inputText size="30" id="Surname" value="#{userBean.user.surname}"
+					required="true" label="Surname"></p:inputText>
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Username:*" />
+				<p:inputText size="30" id="username"
+					value="#{userBean.user.username}" required="true" label="Username"></p:inputText>
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Password:*" />
+				<p:password id="password" value="#{userBean.user.password}" />
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel for="phone" value="Phone:" />
+				<p:inputMask id="phone" value="#{userBean.user.phone}"
+					mask="(99) 99999-9999" />
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:commandButton id="register" value="Register"
+					action="#{userBean.save()}" update="listaData" ajax="false"
+					process="@form" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:selectOneRadio value="#{userBean.user.is_enabled}">
+					<f:selectItem itemValue="true" itemLabel="Ativo"  />
+					<f:selectItem itemValue="false" itemLabel="Inativo" />
+				</h:selectOneRadio>
+			</h:panelGrid>
+		</h:form>
+
+	</p:dialog>
+	<!-- Modal Editar -->
+	<p:dialog header="Edit User" widgetVar="dlg3" modal="true" height="60%"
+		width="70%">
+
+		<h:form id="form2">
+			<p:growl>
+			</p:growl>
+
+			<p:messages />
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Name:*" />
+				<p:inputText id="nameEdit" size="60" value="#{userBean.userEdit.name}"
+					required="true" label="Name" placeholder="Name of User">
+				</p:inputText>
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Surname:*" />
+				<p:inputText size="30" id="SurnameEdit" value="#{userBean.userEdit.surname}"
+					required="true" label="Surname"></p:inputText>
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Username:*" />
+				<p:inputText size="30" id="usernameEdit"
+					value="#{userBean.userEdit.username}" required="true" label="Username"></p:inputText>
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Password:*" />
+				<p:password id="passwordEdit" value="#{userBean.userEdit.password}" />
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:outputLabel for="phoneEdit" value="Phone:" />
+				<p:inputMask id="phoneEdit" value="#{userBean.userEdit.phone}"
+					mask="(99) 99999-9999" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:commandButton id="updateusr" value="Register"
+					action="#{userBean.update(userEdit)}" update="listaData" ajax="false"
+					process="@form" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:selectOneRadio value="#{userBean.user.is_enabled}">
+					<f:selectItem itemValue="true" itemLabel="Ativo"  />
+					<f:selectItem itemValue="false" itemLabel="Inativo" />
+				</h:selectOneRadio>
+			</h:panelGrid>
+		</h:form>
+
+	</p:dialog>
+
+</h:body>
+</html>

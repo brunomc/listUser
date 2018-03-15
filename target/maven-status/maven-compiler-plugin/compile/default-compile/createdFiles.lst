@@ -1,0 +1,4 @@
+br\com\listUser\bean\UserBean.class
+br\com\listUser\service\UserService.class
+br\com\listUser\entity\User.class
+br\com\listUser\repository\UserRepository.class
