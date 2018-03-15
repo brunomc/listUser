@@ -2,11 +2,13 @@ package br.com.listUser.bean;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import org.primefaces.context.RequestContext;
 
@@ -26,7 +28,12 @@ public class UserBean {
 	
 	@PostConstruct
     public void init() {
-		setUsers(userService.findAll());
+		try {
+			setUsers(userService.findAll());
+		} catch (NoResultException e) {
+			System.out.println("Erro ao listar todos Users:"+e);
+		}
+		
 		user = new User();
 		userEdit = new User();
 		
@@ -52,21 +59,22 @@ public class UserBean {
 	       Date data = new Date();
 	       return data;
 	    }
-	public void save() {
+	public void save() throws ExecutionException {
 		if(user != null) {
 			user.setRegister_date(mostraData());
 			userService.salvar(user);
 			setUsers(userService.findAll());
+			
 			user = new User();
 			RequestContext.getCurrentInstance().update("form");
 		}
 	}
-	public void update(User usr) {
+	public void update(User usr) throws ExecutionException {
 		if(usr != null) {
 			userService.update(usr);
 		}
 	}
-	public void delete(User usr) {
+	public void delete(User usr) throws ExecutionException {
 		userService.deletar(usr);
 		setUsers(userService.findAll());
 	}

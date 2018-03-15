@@ -5,8 +5,8 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<h2>Listagem de Users</h2>
-	
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />   
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </h:head>
 <h:body>
 	<h:panelGrid>
@@ -21,52 +21,63 @@
 				sortBy="#{user.username}" rows="10" paginator="true"
 				style="font-size:10pt;">
 
-				<p:column headerText="Id" style="width:10%;" sortBy="#{user.id}"
+				<p:column headerText="Id" style="width:5%;" sortBy="#{user.id}"
 					filterBy="#{user.id}" filterStyle="width:90%;">
 					<h:outputText value="#{user.id}" />
+				</p:column>
+				<p:column headerText="Name" style="width:15%;" sortBy="#{user.name}"
+					filterBy="#{user.name}" filterStyle="width:90%;">
+					<h:outputText value="#{user.name}" />
+				</p:column>
+				<p:column headerText="Surname" style="width:20%;"
+					sortBy="#{user.surname}" filterBy="#{user.surname}"
+					filterStyle="width:90%;">
+					<h:outputText value="#{user.surname}" />
+				</p:column>
+				<p:column headerText="Email" style="width:15%;" sortBy="#{user.email}"
+					filterBy="#{user.email}" filterStyle="width:90%;">
+					<h:outputText value="#{user.email}" />
 				</p:column>
 				<p:column headerText="Username" style="width:10%;"
 					sortBy="#{user.username}" filterBy="#{user.username}"
 					filterStyle="width:90%;">
 					<h:outputText value="#{user.username}" />
 				</p:column>
-				<p:column headerText="Password" style="width:10%;"
-					sortBy="#{user.password}" filterBy="#{user.password}"
-					filterStyle="width:90%;">
-					<h:outputText value="#{user.password}" />
+				<p:column headerText="Enabled?" style="width:5%;"
+					sortBy="#{user.is_enabled}">
+					<h:outputText value="#{userBean.changeLabel(user)}" />
 				</p:column>
-				<p:column headerText="Enabled?" style="width:10%;"
-					sortBy="#{user.is_enabled}" filterBy="#{user.is_enabled}"
-					filterStyle="width:90%;">
-					<h:outputText value="#{userBean.changeLabel(user)}"  />
+				<p:column headerText="Register Date" style="width:15%;"
+					sortBy="#{user.register_date}">
+					<h:outputText value="#{user.register_date}" />
 				</p:column>
-				<p:column headerText="Unidade Responsável" style="width:10%;"
-					sortBy="#{user.username}" filterBy="#{user.username}"
-					filterStyle="width:90%;">
-					<h:outputText value="#{user.username}" />
-				</p:column>
-				
-				<p:column style="width:8%;">
-						<p:growl id="message" showDetail="true" />
+				<p:column>
+					<p:growl id="message" showDetail="true" />
+
+					<p:column>
 						<p:commandButton value="Excluir"
-							actionListener="#{userBean.delete(user)}"
-							update="form1 message" process="@form">
+							actionListener="#{userBean.delete(user)}" update="form1 message"
+							process="@form">
 							<p:confirm header="Confirmação" message="Confirmar exclusão?"
 								icon="ui-icon-alert" />
 						</p:commandButton>
-						
+					</p:column>
 
-						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-							<p:commandButton value="Confirmar" type="button"
-								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-							<p:commandButton value="Cancelar" type="button"
-								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-						</p:confirmDialog>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Confirmar" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="Cancelar" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+
+					<p:column>
 						<p:commandButton icon="ui-icon-pencil" value="Editar"
 							action="#{userBean.populaEdit(user)}" update="@form" />
 					</p:column>
-				
-				
+
+				</p:column>
+
+
 			</p:dataTable>
 		</h:form>
 	</h:panelGrid>
@@ -100,13 +111,25 @@
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Password:*" />
-				<p:password id="password" value="#{userBean.user.password}" />
+				<p:password id="password" value="#{userBean.user.password}"
+					required="true" />
+
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:inputText id="email" required="true" label="email" size="40"
+					requiredMessage="Por favor preencha o email"
+					validatorMessage="Formato inválido" value="#{userBean.user.email}">
+
+					<f:validateRegex
+						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+				</p:inputText>
 
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:outputLabel for="phone" value="Phone:" />
 				<p:inputMask id="phone" value="#{userBean.user.phone}"
-					mask="(99) 99999-9999" />
+					required="true" mask="(99) 99999-9999" />
 
 			</h:panelGrid>
 			<h:panelGrid columns="1">
@@ -116,7 +139,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<h:selectOneRadio value="#{userBean.user.is_enabled}">
-					<f:selectItem itemValue="true" itemLabel="Ativo"  />
+					<f:selectItem itemValue="true" itemLabel="Ativo" />
 					<f:selectItem itemValue="false" itemLabel="Inativo" />
 				</h:selectOneRadio>
 			</h:panelGrid>
@@ -134,20 +157,23 @@
 			<p:messages />
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Name:*" />
-				<p:inputText id="nameEdit" size="60" value="#{userBean.userEdit.name}"
-					required="true" label="Name" placeholder="Name of User">
+				<p:inputText id="nameEdit" size="60"
+					value="#{userBean.userEdit.name}" required="true" label="Name"
+					placeholder="Name of User">
 				</p:inputText>
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Surname:*" />
-				<p:inputText size="30" id="SurnameEdit" value="#{userBean.userEdit.surname}"
-					required="true" label="Surname"></p:inputText>
+				<p:inputText size="30" id="SurnameEdit"
+					value="#{userBean.userEdit.surname}" required="true"
+					label="Surname"></p:inputText>
 
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Username:*" />
 				<p:inputText size="30" id="usernameEdit"
-					value="#{userBean.userEdit.username}" required="true" label="Username"></p:inputText>
+					value="#{userBean.userEdit.username}" required="true"
+					label="Username"></p:inputText>
 
 			</h:panelGrid>
 			<h:panelGrid columns="1">
@@ -162,12 +188,12 @@
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<h:commandButton id="updateusr" value="Register"
-					action="#{userBean.update(userEdit)}" update="listaData" ajax="false"
-					process="@form" />
+					action="#{userBean.update(userEdit)}" update="listaData"
+					ajax="false" process="@form" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<h:selectOneRadio value="#{userBean.user.is_enabled}">
-					<f:selectItem itemValue="true" itemLabel="Ativo"  />
+					<f:selectItem itemValue="true" itemLabel="Ativo" />
 					<f:selectItem itemValue="false" itemLabel="Inativo" />
 				</h:selectOneRadio>
 			</h:panelGrid>
