@@ -134,16 +134,17 @@
 
 			</h:panelGrid>
 			<h:panelGrid columns="1">
-				<h:commandButton id="register" value="Register"
-					action="#{userBean.save()}" update="listaData" ajax="false"
-					process="@form" />
-			</h:panelGrid>
-			<h:panelGrid columns="1">
 				<h:selectOneRadio value="#{userBean.user.is_enabled}">
 					<f:selectItem itemValue="true" itemLabel="Ativo" />
 					<f:selectItem itemValue="false" itemLabel="Inativo" />
 				</h:selectOneRadio>
 			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:commandButton id="register" value="Register"
+					action="#{userBean.save()}" update="listaData" ajax="false"
+					process="@form" />
+			</h:panelGrid>
+			
 		</h:form>
 
 	</p:dialog>
@@ -188,9 +189,16 @@
 					mask="(99) 99999-9999" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
-				<h:commandButton id="updateusr" value="Register"
-					action="#{userBean.update(userEdit)}" update="listaData"
-					ajax="false" process="@form" />
+				<p:outputLabel value="Email:*" />
+				<p:inputText id="email" required="true" label="email" size="40"
+					requiredMessage="Por favor preencha o email"
+					validatorMessage="Formato inválido" value="#{userBean.userEdit.email}">
+
+					<f:validateRegex
+						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+				</p:inputText>
+
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<h:selectOneRadio value="#{userBean.user.is_enabled}">
@@ -198,6 +206,12 @@
 					<f:selectItem itemValue="false" itemLabel="Inativo" />
 				</h:selectOneRadio>
 			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<h:commandButton id="updateusr" value="Register"
+					action="#{userBean.update(userEdit)}" update="listaData"
+					ajax="false" process="@form" />
+			</h:panelGrid>
+			
 		</h:form>
 
 	</p:dialog>
